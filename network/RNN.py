@@ -98,6 +98,7 @@ class Net:
             avg_mse = tf.keras.metrics.Mean('mse', dtype=tf.float32)
 
             for j in range(iter):
+
                 labels = self._train_data[1][j * batch_size: j * batch_size + batch_size]
                 inputs = self._train_data[0][j * batch_size: j * batch_size + batch_size]
 
