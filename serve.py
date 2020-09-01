@@ -25,12 +25,13 @@ def hello():
 @app.route("/abr/image/predict", methods=['POST'])
 def upload():
     file = request.files['file']
-    value = request.get_json()
+    value = request.values
+
     id = value["id"]
 
     if file:
         try:
-            fpath = os.path.join(configure["file_path"], file.filename)
+            fpath = os.path.join("./", file.filename)
             file.save(fpath)
 
             vector, end_of_x, img_mat = extractor.extract(fpath, True)
@@ -54,7 +55,7 @@ def upload():
                 "id": id,
                 "version": version,
                 "result": "fail",
-                "message": e
+                "message": str(e)
             })
     else:
         return jsonify({
