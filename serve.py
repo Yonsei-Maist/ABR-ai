@@ -34,8 +34,8 @@ def upload():
             fpath = os.path.join("./", file.filename)
             file.save(fpath)
 
-            vector, end_of_x, img_mat = extractor.extract(fpath, True)
-            predict = net.predict(200, vector)
+            vector = extractor.extract(fpath, True)
+            predict = 0  # net.predict(200, vector[0])
 
             return jsonify({
                 "id": id,
