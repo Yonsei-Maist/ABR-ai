@@ -25,6 +25,9 @@ def hello():
 @app.route("/abr/image/predict", methods=['POST'])
 def upload():
     file = request.files['file']
+    value = request.get_json()
+    id = value["id"]
+
     if file:
         try:
             fpath = os.path.join(configure["file_path"], file.filename)
