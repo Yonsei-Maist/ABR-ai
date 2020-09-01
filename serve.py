@@ -4,7 +4,6 @@
 from flask import Flask, jsonify, request
 from network.RNN import Net
 from imagelib.extractor import Extractor
-from Crypto.Cipher import AES
 from config import configure
 
 import os
