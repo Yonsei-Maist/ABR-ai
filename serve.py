@@ -23,21 +23,28 @@ def hello():
     return "Hello World"
 
 
-@app.route("/abr/image/save", methods=['POST'])
+@app.route("/abr/image/predict", methods=['POST'])
 def upload():
     file = request.files['file']
     if file:
         try:
             fpath = os.path.join(configure["file_path"], file.filename)
             file.save(fpath)
-            encrypt = AES.new(key, AES.MODE_CBC, iv)
+
+            vector, end_of_x, img_mat = extractor.extract(fpath, True)
+            predict = net.predict(200, vector)
 
             return jsonify({
                 "id": id,
                 "version": version,
                 "result": "success",
                 "data": {
-                    "imagepath": encrypt.encrypt(fpath)
+                    "graph": vector,
+                    "peak": [
+                        {
+                            "prediction": predict
+                        }
+                    ]
                 }
             })
         except Exception as e:
@@ -55,39 +62,6 @@ def upload():
             "message": "No file"
         })
 
-
-@app.route("/abr/ai/predict", methods=['POST'])
-def predict():
-    value = request.get_json()
-    id = value["id"]
-    image_path = value["imagepath"]
-    decrypt = AES.new(key, AES.MODE_CBC, iv)
-    real_path = decrypt.decrypt(image_path)
-    try:
-        vector, end_of_x, img_mat = extractor.extract(real_path, True)
-        predict = net.predict(200, vector)
-
-        return jsonify({
-            "id": id,
-            "version": version,
-            "result": "success",
-            "data": {
-                "graph": vector,
-                "peak": [
-                    {
-                        "prediction": predict,
-                        "score": -1
-                    }
-                ]
-            }
-        })
-    except Exception as e:
-        return jsonify({
-            "id": id,
-            "version": version,
-            "result": "fail",
-            "message": e
-        })
 
 
 if __name__ == "__main__":
