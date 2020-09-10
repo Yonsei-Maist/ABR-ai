@@ -7,7 +7,7 @@ class IPLocation:
         if ip == "127.0.0.1":
             return "local"
 
-        URL = 'https://ipinfo.io/json'
+        URL = 'https://ipinfo.io/{}/json'.format(ip)
         response = requests.get(URL)
         location = json.loads(response.text)
 
