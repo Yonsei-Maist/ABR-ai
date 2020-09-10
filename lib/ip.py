@@ -11,4 +11,4 @@ class IPLocation:
         response = requests.get(URL)
         location = json.loads(response.text)
 
-        return "{}, {}, {}".format(location.org, location.city, location.country)
+        return "{}, {}, {}".format(location["org"], location["city"], location["country"])
