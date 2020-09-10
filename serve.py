@@ -18,6 +18,12 @@ key = "maistabr"
 iv = "initvector"
 
 
+@app.before_request
+def show_ip():
+    ip = request.remote_addr
+    print("location: ", IPLocation.get_region(ip))
+
+
 @app.route("/")
 def hello():
     return "Hello World"
@@ -32,8 +38,6 @@ def upload():
 
     if file:
         try:
-            ip = request.remote_addr
-            print("location: ", IPLocation.get_region(ip))
             fpath = os.path.join(configure["file_path"], file.filename)
             file.save(fpath)
 
