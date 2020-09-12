@@ -13,7 +13,7 @@ class Net:
                 line = lines[i]
                 data_split = line.split('\t')
 
-                if len(data_split) < 2:
+                if len(data_split) < 4:
                     continue
 
                 index = int(data_split[1])
@@ -56,7 +56,8 @@ class Net:
                         # data_all[1].append([answer, data_vector[answer]])
 
             sp = int(len(data_all[0]) * 0.8)
-
+            print("train data : ", sp)
+            print("test data : ", len(data_all[0]) - sp)
             self._train_data = [tf.convert_to_tensor(data_all[2][:sp], dtype=tf.float32), tf.convert_to_tensor(data_all[1][:sp], dtype=tf.float32)]
             self._test_data = [tf.convert_to_tensor(data_all[2][sp:], dtype=tf.float32), tf.convert_to_tensor(data_all[1][sp:], dtype=tf.float32)]
 
