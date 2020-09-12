@@ -20,9 +20,16 @@ flask lastest
 git clone https://github.com/Yonsei-Maist/ABR-image-processor.git
 ```
 
-## Usage
+## Run
 ```
+# server
 python3 serve.py
+
+# batch
+python3 batch.py
+
+# set configure
+vi config.py (need restart)
 ```
 
 ## Author
