@@ -1,2 +1,2 @@
-model_checkpoint_path: "ABR_400.tf"
-all_model_checkpoint_paths: "ABR_400.tf"
+model_checkpoint_path: "ABR_1300.tf"
+all_model_checkpoint_paths: "ABR_1300.tf"
