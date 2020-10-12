@@ -6,6 +6,7 @@ from network.RNN import Net
 from imagelib.extractor import Extractor
 from config import configure
 from lib.ip import IPLocation
+import cv2
 
 import os
 
@@ -43,7 +44,7 @@ def upload():
 
             vector = extractor.extract(fpath, True)
             tensor = net.vector_to_data(vector, 660)
-            predict = net.predict(300, tensor)
+            predict = net.predict(144, tensor)
 
             pred = net.to_top_predict(predict)
 
