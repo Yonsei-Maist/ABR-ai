@@ -161,7 +161,7 @@ class Net:
             print('Epoch: {} Cost: {} MSE: {}'.format(i, avg_loss_value, avg_mse_value))
 
             # save weight every 100 epochs
-            if i % 100 == 0 and i != 0:
+            if (i % 100 == 0 and i != 0) or avg_mse_value < 10:
                 self._model.save_weights('./checkpoints/ABR_{}.tf'.format(i))
 
             avg_loss.reset_states()

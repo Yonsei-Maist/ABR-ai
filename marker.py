@@ -5,12 +5,12 @@ import numpy as np
 
 net = Net('./data/Response-result-origin.txt')
 
-index = 0
+index = 4
 
 data_vector = net.get_test_data()[0][index:index + 1]
 data_label = net.get_test_data()[1][index:index + 1]
 
-predict = net.predict(300, data_vector)
+predict = net.predict(144, data_vector)
 
 data_for_graph = []
 
