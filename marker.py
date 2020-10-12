@@ -9,7 +9,7 @@ index = 4
 
 data_vector = net.get_test_data()[0][index:index + 1]
 data_label = net.get_test_data()[1][index:index + 1]
-
+print(data_vector)
 predict = net.predict(144, data_vector)
 
 data_for_graph = []

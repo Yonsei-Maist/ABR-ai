@@ -42,7 +42,7 @@ def upload():
             fpath = os.path.join(configure["file_path"], file.filename)
             file.save(fpath)
 
-            vector = extractor.extract(fpath, True)
+            vector = extractor.extract(fpath, 667, True)
             tensor = net.vector_to_data(vector, 660)
             predict = net.predict(144, tensor)
 
