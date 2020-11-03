@@ -5,12 +5,12 @@ MAINTAINER arknell@yonsei.ac.kr
 RUN apt update
 
 # install python 3.8
-RUN apt install python3-pip
+RUN apt install -y python
 
 # install library
-RUN pip3 install tensorflow
-RUN pip3 install opencv-python
-RUN pip3 install flask
+RUN pip install tensorflow
+RUN pip install opencv-python
+RUN pip install flask
 
 # copy source
 COPY . /usr/src/app
