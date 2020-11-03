@@ -8,9 +8,9 @@ RUN apt update
 RUN apt install -y python3
 
 # install library
-RUN pip install tensorflow
-RUN pip install opencv-python
-RUN pip install flask
+RUN pip3 install tensorflow
+RUN pip3 install opencv-python
+RUN pip3 install flask
 
 # copy source
 COPY . /usr/src/app
