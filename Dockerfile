@@ -5,7 +5,7 @@ MAINTAINER arknell@yonsei.ac.kr
 RUN apt update
 
 # install python 3.8
-RUN apt install -y python
+RUN apt install -y python3
 
 # install library
 RUN pip install tensorflow
