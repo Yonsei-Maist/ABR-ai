@@ -1,19 +1,17 @@
 FROM       ubuntu:20.04
 MAINTAINER arknell@yonsei.ac.kr
 
-# update software
-RUN apt update
-RUN apt install software-properties-common
-RUN add-apt-repository ppa:deadsnakes/ppa
+# update pacakge
 RUN apt update
 
-# install python 3.8
-RUN apt install python3.8
+# install python 3
+RUN apt install -y python3
+RUN apt install -y python3-pip
 
 # install library
-RUN pip install tensorflow
-RUN pip install opencv-python
-RUN pip install flask
+RUN pip3 install tensorflow
+RUN pip3 install opencv-python
+RUN pip3 install flask
 
 # copy source
 COPY . /usr/src/app
