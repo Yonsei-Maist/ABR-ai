@@ -44,7 +44,7 @@ def upload():
 
             vector = extractor.extract(fpath, 667, True)
             tensor = net.vector_to_data(vector, 660)
-            predict = net.predict(144, tensor)
+            predict = net.predict(196, tensor)
 
             pred = net.to_top_predict(predict)
 

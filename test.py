@@ -6,7 +6,7 @@ test.py
 from network.RNN import Net
 
 net = Net("./data/Response-result-origin.txt")
-for i in range(1, 200):
+for i in range(1, 1000):
 
     try:
         avg_loss, res = net.test(i)

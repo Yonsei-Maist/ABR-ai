@@ -20,7 +20,7 @@ def model_test_1(time_step):
 def model_test_1_2(time_step):
     input_layer = tf.keras.layers.Input([time_step, 1])
 
-    output = tf.keras.layers.Bidirectional(layer=tf.keras.layers.GRU(32, return_sequences=True))(input_layer)
+    output = tf.keras.layers.Bidirectional(layer=tf.keras.layers.GRU(128, return_sequences=True))(input_layer)
     output = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(1))(output)
     output = tf.keras.layers.Flatten()(output)
     # output = tf.keras.layers.Dense(time_step)(output)
