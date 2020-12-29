@@ -7,7 +7,7 @@ RUN apt update
 # install python 3
 RUN apt install -y python3
 RUN apt install -y python3-pip
-RUN apt install git
+RUN apt install -y git
 
 # install library
 RUN pip3 install tensorflow
