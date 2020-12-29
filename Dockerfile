@@ -12,6 +12,7 @@ RUN apt install -y python3-pip
 RUN pip3 install tensorflow
 RUN pip3 install opencv-python
 RUN pip3 install flask
+RUN pip3 install -U git+https://git@github.com/Yonsei-Maist/ABR-image-processor.git
 
 # copy source
 COPY . /usr/src/app
