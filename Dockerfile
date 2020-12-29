@@ -20,5 +20,5 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 # start server
-EXPOSE 9000
-CMD    nohup python3 serve.py > log 2>&1 &
+ENTRYPOINT ["python"]
+CMD ["serve.py"]
