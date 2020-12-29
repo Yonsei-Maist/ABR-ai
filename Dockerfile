@@ -3,11 +3,12 @@ MAINTAINER arknell@yonsei.ac.kr
 
 # update pacakge
 RUN apt update
+RUN apt-get update
 
 # install python 3
 RUN apt install -y python3
 RUN apt install -y python3-pip
-RUN apt install -y git
+RUN apt-get install -y git
 
 # install library
 RUN pip3 install tensorflow
