@@ -23,5 +23,5 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 # start server
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python3"]
 CMD ["serve.py"]
