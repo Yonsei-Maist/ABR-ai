@@ -9,6 +9,7 @@ RUN apt-get update
 RUN apt install -y python3
 RUN apt install -y python3-pip
 RUN apt-get install -y libgl1-mesa-glx
+RUN export DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -y libgtk2.0-dev
 RUN apt-get install -y git
 
