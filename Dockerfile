@@ -8,8 +8,7 @@ RUN apt-get update
 # install python 3
 RUN apt install -y python3
 RUN apt install -y python3-pip
-RUN apt install libgl1-mesa-glx
-RUN apt-get install ffmpeg libsm6 libxext6  -y
+RUN apt-get install -y libgl1-mesa-glx
 RUN apt-get install -y git
 
 # install library
