@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import network.model as m
+import matplotlib.pyplot as plt
 
 
 class Net:
@@ -172,3 +173,27 @@ class Net:
 
     def get_train_data(self):
         return self._train_data
+
+    def capture_image(self, checkpoint_index, image_path):
+        ldl_c_d_for_graph = []
+        data_for_graph = []
+        avg_loss, res = self.test(checkpoint_index)
+
+        for i in range(len(res)):
+            predict_index = int(tf.math.argmax(res[i]))
+            ldl_c_d_for_graph.append(predict_index)
+
+        for i in range(len(self.get_test_data()[1])):
+            data_for_graph.append(int(tf.math.argmax(self.get_test_data()[1][i])))
+
+        plt.figure(figsize=(8, 8))
+        # multiple line plot
+        plt.scatter(data_for_graph, ldl_c_d_for_graph, label="Peak", s=3)
+
+        # X축 이름
+        plt.xlabel('peak_actual')
+        # Y축 이름
+        plt.ylabel('peak_predicted')
+
+        plt.legend()
+        plt.savefig(image_path)

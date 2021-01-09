@@ -39,6 +39,31 @@ class DataMaker:
         return self.extractor.extract_image_with_peak(cropped_image[0], True), \
                self.extractor.extract_image_with_peak(cropped_image[1], False)
 
+    def to_obj_list(self, graph_list, is_right, x_limit=-1):
+        result = []
+        for i in range(len(graph_list)):
+            graph_item = graph_list[i]
+            graph = [str(g) for g in graph_item["graph"]]
+            peak_list = graph_item["peak"]
+            peak_list = [str(x) for (x, y) in peak_list]
+
+            if x_limit > 0:
+                if len(graph) > x_limit:
+                    graph = graph[:x_limit]
+                else:
+                    graph = graph + ["0" for x in range(x_limit - len(graph))]
+
+            obj = {
+                "value": ",".join(graph),
+                "peak": peak_list,
+                "isRight": is_right,
+                "num": i
+            }
+
+            result.append(obj)
+
+        return result
+
     def to_list(self, file_path, graph_list, x_limit=-1):
         text_list = []
         for i in range(len(graph_list)):

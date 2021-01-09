@@ -1,22 +1,23 @@
 """
 @Author Chanwoo Kwon, Yonsei Univ. Researcher since 2020.05~
 """
-from flask import Flask, jsonify, request
-from network.RNN import Net
-from imagelib.extractor import Extractor
-from config import configure
-from lib.ip import IPLocation
-import cv2
+from flask import Flask, request, render_template
+from flask_cors import CORS
 
-import os
+import sys
+
+from config import config_by_name, fail_msg
+from lib.ip import IPLocation
+from routes.ai.ai_api import ai_api
+from routes.image.image_api import image_api
+
+from lib.crypto import AESCipher
 
 app = Flask(__name__)
+app.register_blueprint(ai_api)
+app.register_blueprint(image_api)
 
-net = Net('./data/Response-result-origin.txt')
-extractor = Extractor()
-version = "0.1"
-key = "maistabr"
-iv = "initvector"
+CORS(app, resources={r'/abr/image/origin/*': {'origins': '*'}})
 
 
 @app.before_request
@@ -25,59 +26,17 @@ def show_ip():
     print("location: ", IPLocation.get_region(ip))
 
 
-@app.route("/")
-def hello():
-    return "Hello World"
+@app.route('/')
+def home():
+    return render_template('react-abr-manager/index.html')
 
 
-@app.route("/abr/image/predict", methods=['POST'])
-def upload():
-    file = request.files['file']
-    value = request.values
-
-    id = value["id"]
-
-    if file:
-        try:
-            fpath = os.path.join(configure["file_path"], file.filename)
-            file.save(fpath)
-
-            vector = extractor.extract(fpath, 667, True)
-            tensor = net.vector_to_data(vector, 660)
-            predict = net.predict(196, tensor)
-
-            pred = net.to_top_predict(predict)
-
-            result = []
-            for i in range(len(vector)):
-                result.append({
-                    "graph": vector[i],
-                    "peak": pred[i]
-                })
-
-            return jsonify({
-                "id": id,
-                "version": version,
-                "result": "success",
-                "data": {
-                    "extract": result
-                }
-            })
-        except Exception as e:
-            return jsonify({
-                "id": id,
-                "version": version,
-                "result": "fail",
-                "message": str(e)
-            })
-    else:
-        return jsonify({
-            "id": id,
-            "version": version,
-            "result": "fail",
-            "message": "No file"
-        })
+@app.errorhandler(Exception)
+def handle_error(e):
+    return fail_msg(request.files['id'], str(e))
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=configure["port"])
+    config_name = sys.argv[2]
+    app.config.from_object(config_by_name[config_name])
+    app.run(host="0.0.0.0", port=app.config["PORT"])
