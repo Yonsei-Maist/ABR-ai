@@ -13,26 +13,27 @@ api = Api(image_api)
 image_method = ImageMethod(current_app)
 
 
-@image_api.route("/abr/image/origin/upload", methods=['POST'])
+@image_api.route("/origin/upload", methods=['POST'])
 @cross_origin()
 def upload_origin():
     file = request.files['file']
 
     if file:
         image_method.upload_origin(file)
+
         return jsonify(success_msg())
     else:
         return fail_msg("file is not exist")
 
 
-@image_api.route("/abr/image/network", methods=["GET"])
+@image_api.route("/network", methods=["GET"])
 def capture():
     image_method.capture_network()
 
     return success_msg()
 
 
-@image_api.route("/abr/image/predict", methods=['POST'])
+@image_api.route("/predict", methods=['POST'])
 def predict_image():
     file = request.files['file']
 
@@ -44,7 +45,7 @@ def predict_image():
         return fail_msg("file is not exist")
 
 
-@image_api.route("/abr/image/data/<int:page>/<int:per_page>")
+@image_api.route("/data/<int:page>/<int:per_page>")
 @cross_origin()
 def read_data_list(page, per_page):
     data = image_method.read_data_list(int(page), int(per_page))
@@ -52,9 +53,11 @@ def read_data_list(page, per_page):
     return success_msg(data)
 
 
-@image_api.route("/abr/image/data/one/<id_data>")
+@image_api.route("/data/one/<int:id_data>")
 @cross_origin()
 def read_data_detail(id_data):
     data = image_method.read_data_detail(id_data)
 
-    return success_msg(data)
+    if data is None or len(data) == 0:
+        return fail_msg("Not Exists.")
+    return success_msg({"valueList": data})

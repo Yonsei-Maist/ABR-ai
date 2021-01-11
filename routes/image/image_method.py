@@ -1,6 +1,6 @@
 from imagelib.extractor import Extractor
 from lib.data import DataMaker
-from database.datamanager.dao import DataManager
+from routes.image.image_dao import DataManager
 from network.RNN import Net
 
 import os
@@ -47,7 +47,7 @@ class ImageMethod:
         result.extend(data_maker.to_obj_list(left_graph, False, 660))
         result.extend(data_maker.to_obj_list(right_graph, True, 660))
 
-        data_manager.insert_values(result, fpath)
+        data_manager.insert_values(result, rpath)
 
     def predict_image(self, file):
         fpath = os.path.join(self.app.config["FILE_PATH"], file.filename)
@@ -78,4 +78,13 @@ class ImageMethod:
 
     def read_data_detail(self, id_data):
         data_manager = self.create_dao()
-        return data_manager.select_data_one(id_data)
+        data = data_manager.select_data_one(id_data)
+
+        if len(data) == 0:
+            return None
+
+        for data_one in data:
+            str_list = data_one["blob_values"].decode("utf-8").split(',')
+            data_one["blob_values"] = [float(value) for value in str_list]
+
+        return data
