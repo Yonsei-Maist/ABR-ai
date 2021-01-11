@@ -42,9 +42,9 @@ fail = {
 }
 
 
-def success_msg(request_id, data=None):
-    return dict(success, **{"id": request_id, "data": data})
+def success_msg(data=None):
+    return dict(success, **{"data": data})
 
 
-def fail_msg(request_id, message):
-    return dict(fail, **{"id": request_id, "message": message})
+def fail_msg(message):
+    return dict(fail, **{"message": message})

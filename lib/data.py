@@ -9,7 +9,7 @@ class DataMaker:
     def __init__(self):
         self.extractor = Extractor()
 
-    def batch(self, base_path, save_path, x_limit = -1):
+    def batch(self, base_path, save_path, x_limit=-1):
         files = ["{}{}".format(base_path, f) for f in listdir(base_path) if isfile(join(base_path, f))]
         graph_list = []
 
@@ -24,7 +24,7 @@ class DataMaker:
             except Exception as e:
                 graph_list.append("{}\t-1\t{}".format(file, str(e)))
 
-        with open(save_path, "w") as f:
+        with open(save_path, "a") as f:
             f.write("\n".join(graph_list))
 
         print("batch done.")

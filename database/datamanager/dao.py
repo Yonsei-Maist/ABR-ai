@@ -15,7 +15,8 @@ class DAO:
                        database=self._database,
                        user=self.user,
                        password=self.password,
-                       charset='utf8'
+                       charset='utf8',
+                       cursorclass=pymysql.cursors.DictCursor
                 )
 
     def get_connection(self):
@@ -42,8 +43,9 @@ class DAO:
 
         rows = curs.fetchall()
         conn.close()
+        self._conn = None
 
-        return json.dumps(rows)
+        return rows
 
     def read_with_conn(self, conn, sql, *param):
         curs = conn.cursor()
@@ -70,13 +72,22 @@ class DataManager(DAO):
     def select_data_list(self, page, per_page):
         sql = "" \
               " SELECT " \
-              "     id_data" \
+              "     COUNT(id_data) as total " \
+              " FROM TBL_DATA "
+
+        row = self.read(sql)
+        sql = "" \
+              " SELECT " \
+              "     FORMAT(@rownum:=@rownum+1, 0) as rownum" \
+              "     , id_data" \
               "     , var_path_origin" \
+              "     , var_name" \
               "     , date_read(date_create) as date_create" \
-              "     , date_read(date_edit) as date_create" \
-              " FROM TBL_DATA " \
-              " LIMIT %d, %d"
-        return self.read(sql, page, per_page)
+              "     , date_read(date_edit) as data_edit" \
+              " FROM TBL_DATA, (SELECT @rownum:={0}) TMP " \
+              " LIMIT {0}, {1}".format((page - 1) * per_page, per_page)
+
+        return dict({"list": self.read(sql)}, **row[0])
 
     def select_data_one(self, id_data):
         sql = "" \
@@ -85,10 +96,10 @@ class DataManager(DAO):
               "     , int_num" \
               "     , blob_values" \
               "     , date_read(date_create) as date_create" \
-              "     , date_read(date_edit) as date_create" \
+              "     , date_read(date_edit) as data_edit" \
               " FROM TBL_VALUE " \
-              " WHERE id_data = %d"
-        return self.read(sql, id_data)
+              " WHERE id_data = {0}".format(id_data)
+        return self.read(sql)
 
     def select_value_peak(self, id_value):
         sql = "" \
@@ -97,22 +108,24 @@ class DataManager(DAO):
               "     , int_index" \
               "     , int_decibel" \
               "     , date_read(date_create) as date_create" \
-              "     , date_read(date_edit) as date_create" \
+              "     , date_read(date_edit) as data_edit" \
               " FROM TBL_PEAK " \
               " WHERE id_value = %d" \
 
         return self.read(sql, id_value)
 
-    def insert_data(self, file_path):
+    def insert_data(self, file_path, file_name):
         sql = "" \
               "INSERT INTO TBL_DATA " \
               " (" \
               "     var_path_origin" \
+              "     , var_name" \
               " )" \
               "VALUES" \
               " (" \
               "     '{0}'" \
-              " )".format(file_path)
+              "     , '{1}'" \
+              " )".format(file_path, file_name)
         return self.write(sql)
 
     def insert_values(self, value_list, file_path):
@@ -136,7 +149,7 @@ class DataManager(DAO):
         for j in range(len(value_list)):
             value = value_list[j]
 
-            if j is 0:
+            if j == 0:
                 sql_values += " SELECT "
             else:
                 sql_values += " UNION SELECT "
@@ -155,7 +168,7 @@ class DataManager(DAO):
             for k in range(len(peak_list)):
                 peak = peak_list[k]
 
-                if j is 0 and k is 0:
+                if j == 0 and k == 0:
                     sql_peak += " SELECT "
                 else:
                     sql_peak += " UNION SELECT "

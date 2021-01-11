@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 
 
 class Net:
+    def check_integer_string(self, int_value):
+        try:
+            return int(int_value)
+        except ValueError as e:
+            return -1
+
     def __init__(self, data_path):
         data_all = [[], [], []]
         with open(data_path) as f:
@@ -22,7 +28,7 @@ class Net:
                     graph = data_split[2].split(',')
                     peak = data_split[3].split(',')
 
-                    if len(peak) == 0:
+                    if len(peak) == 0 or self.check_integer_string(peak[-1]) == -1:
                         continue
 
                     data_vector = []
@@ -62,6 +68,7 @@ class Net:
             self._train_data = [tf.convert_to_tensor(data_all[2][:sp], dtype=tf.float32), tf.convert_to_tensor(data_all[1][:sp], dtype=tf.float32)]
             self._test_data = [tf.convert_to_tensor(data_all[2][sp:], dtype=tf.float32), tf.convert_to_tensor(data_all[1][sp:], dtype=tf.float32)]
 
+        print(self._train_data[0].shape)
         self._time_step = self._train_data[0].shape[1]
         self._model = None
 

@@ -5,5 +5,5 @@ main.py
 
 from network.RNN import Net
 
-net = Net("./data/Response-result-origin.txt")
+net = Net("./data/data.2021.01.11.txt")
 net.train()

@@ -5,6 +5,8 @@ from network.RNN import Net
 
 import os
 import cv2
+import datetime
+import uuid
 
 net = Net('./data/Response-result-origin.txt')
 extractor = Extractor()
@@ -15,18 +17,29 @@ class ImageMethod:
     def __init__(self, app):
         self.app = app
 
-    def upload_origin(self, file):
-        fpath = os.path.join(self.app.config["FILE_PATH"], file.filename)
-        file.save(fpath)
-
-        image = cv2.imread(fpath)
-        data_manager = DataManager(
+    def create_dao(self):
+        return DataManager(
             self.app.config["DATABASE_HOST"],
             self.app.config["DATABASE"],
             self.app.config["DATABASE_USER"],
             self.app.config["DATABASE_PASSWORD"]
         )
-        data_manager.insert_data(fpath)
+
+    def upload_origin(self, file):
+        new_filename = uuid.uuid4().hex + "." + file.filename.split('.')[1]
+        now = datetime.datetime.now()
+        frpath = os.path.join(str(now.year), str(now.month), str(now.day))
+        full_frpath = os.path.join(self.app.config["FILE_PATH"], frpath)
+        if not os.path.exists(full_frpath):
+            os.makedirs(full_frpath)
+
+        rpath = os.path.join(frpath, new_filename)
+        fpath = os.path.join(self.app.config["FILE_PATH"], rpath)
+        file.save(fpath)
+
+        image = cv2.imread(fpath)
+        data_manager = self.create_dao()
+        data_manager.insert_data(rpath, file.filename)
         cropped_image = data_maker.crop(image)
         left_graph, right_graph = data_maker.get_graph(cropped_image)
 
@@ -57,3 +70,12 @@ class ImageMethod:
 
     def capture_network(self):
         net.capture_image(196, "")
+
+    def read_data_list(self, page, per_page):
+
+        data_manager = self.create_dao()
+        return data_manager.select_data_list(page, per_page)
+
+    def read_data_detail(self, id_data):
+        data_manager = self.create_dao()
+        return data_manager.select_data_one(id_data)

@@ -1,7 +1,7 @@
 """
 @Author Chanwoo Kwon, Yonsei Univ. Researcher since 2020.05~
 """
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, g
 from flask_cors import CORS
 
 import sys
@@ -15,13 +15,14 @@ from lib.crypto import AESCipher
 
 app = Flask(__name__)
 app.register_blueprint(ai_api)
-app.register_blueprint(image_api)
+app.register_blueprint(image_api, url_prefix="/abr/image/")
 
-CORS(app, resources={r'/abr/image/origin/*': {'origins': '*'}})
+CORS(app, resources={r'/abr/image/*': {'origins': '*'}})
 
 
 @app.before_request
-def show_ip():
+def before():
+    # show ip
     ip = request.remote_addr
     print("location: ", IPLocation.get_region(ip))
 
@@ -33,7 +34,7 @@ def home():
 
 @app.errorhandler(Exception)
 def handle_error(e):
-    return fail_msg(request.files['id'], str(e))
+    return fail_msg(str(e))
 
 
 if __name__ == "__main__":
