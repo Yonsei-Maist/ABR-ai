@@ -14,7 +14,6 @@ class DataManager(DAO):
               " SELECT " \
               "     FORMAT(@rownum:=@rownum+1, 0) as rownum" \
               "     , id_data" \
-              "     , var_path_origin" \
               "     , var_name" \
               "     , date_read(date_create) as date_create" \
               "     , date_read(date_edit) as data_edit" \
@@ -31,11 +30,13 @@ class DataManager(DAO):
               "     , TV.blob_values" \
               "     , TV.int_decibel" \
               "     , TV.char_is_right" \
+              "     , TV.var_crop" \
+              "     , TD.var_path_origin" \
               "     , date_read(TV.date_create) as date_create" \
               "     , date_read(TV.date_edit) as data_edit" \
               "     , (SELECT MAX(int_index) FROM TBL_PEAK TP WHERE TP.id_value = TV.id_value) as int_peak" \
-              " FROM TBL_VALUE TV " \
-              " WHERE id_data = {0}".format(id_data)
+              " FROM TBL_VALUE TV LEFT JOIN TBL_DATA TD ON TV.id_data = TD.id_data" \
+              " WHERE TV.id_data = {0}".format(id_data)
         return self.read(sql)
 
     def select_value_peak(self, id_value):

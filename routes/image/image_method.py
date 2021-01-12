@@ -3,6 +3,7 @@ from lib.data import DataMaker
 from routes.image.image_dao import DataManager
 from network.RNN import Net
 
+import base64
 import os
 import cv2
 import datetime
@@ -81,10 +82,17 @@ class ImageMethod:
         data = data_manager.select_data_one(id_data)
 
         if len(data) == 0:
-            return None
+            return None, None, None
+
+        filename = data[0]["var_path_origin"]
+        path = os.path.join(self.app.config["FILE_PATH"], filename)
+        with open(path, 'rb') as fd:
+            img = cv2.imread(path)
+            height, width, _ = img.shape
+            base64_string = base64.b64encode(fd.read())
 
         for data_one in data:
             str_list = data_one["blob_values"].decode("utf-8").split(',')
             data_one["blob_values"] = [float(value) for value in str_list]
 
-        return data
+        return data, base64_string.decode("utf-8"), {"height": height, "width": width}

@@ -56,8 +56,8 @@ def read_data_list(page, per_page):
 @image_api.route("/data/one/<int:id_data>")
 @cross_origin()
 def read_data_detail(id_data):
-    data = image_method.read_data_detail(id_data)
+    data, base64_string, size = image_method.read_data_detail(id_data)
 
     if data is None or len(data) == 0:
         return fail_msg("Not Exists.")
-    return success_msg({"valueList": data})
+    return success_msg({"valueList": data, "imageOrigin": base64_string, "imageSize": size})
