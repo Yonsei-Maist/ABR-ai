@@ -27,9 +27,9 @@ def before():
     print("location: ", IPLocation.get_region(ip))
 
 
-@app.route('/')
-def home():
-    return render_template('react-abr-manager/index.html')
+# @app.route('/')
+# def home():
+#     return render_template('react-abr-manager/index.html')
 
 
 @app.errorhandler(Exception)

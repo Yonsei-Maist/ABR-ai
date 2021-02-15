@@ -14,19 +14,19 @@ class Config(object):
 class LocalConfig(Config):
     PORT = 9000
     FILE_PATH = '/Users/gwonchan-u/'
-    DATABASE_HOST = Config.decrypt('7jJAK4rwblj+jo6YLy9Qdvqh4M+xCvNIyBwhes6LUbhoIsS04Yahv2PwUoRILoC+81IDm6EguGl14S5gTAKXd9BoE6lVtbvzNrD7KY1+ddU=')
+    DATABASE_HOST = Config.decrypt('g75HCbNFvcsBbZTyE5lxxivLSWVED5EW/a3WCvTKu7QB2L+O3V0xGRnRuJ7QfMbH')
     DATABASE = Config.decrypt('iyvZkEdWqJpCFWUCzmzeRNcW3MYNBr2yEYrwbGTCx8wFBTKbEU74ynSyyzEXsVq4')
-    DATABASE_USER = Config.decrypt('Tj8Edm0+VXWM4FbrflUMnLLmDCXhPI+YnWvt3NVS56fDUZ46XaNhU4CeWQm9uaty')
-    DATABASE_PASSWORD = Config.decrypt('M0BXUPFf705v6UxCCH89JbUHR40f6hZJmimsne/k/l/TGU5CTyEXI1nV9MZvZzXf')
+    DATABASE_USER = Config.decrypt('Sfq+bb38EuBgsLKRuP+GpqzAezwQPKXl02UsiwQuWgq5MkEGToVVFO7nqHNvusiM')
+    DATABASE_PASSWORD = Config.decrypt('VLI/oi5AznaBGjyt0Rn2QsO7D7ccX+iUklAdSbE9+sFumcj8AuP8gqGV/ffWTxyT')
 
 
 class DevelopmentConfig(Config):
     PORT = 9000
     FILE_PATH = '/usr/data/'
-    DATABASE_HOST = Config.decrypt('7jJAK4rwblj+jo6YLy9Qdvqh4M+xCvNIyBwhes6LUbhoIsS04Yahv2PwUoRILoC+81IDm6EguGl14S5gTAKXd9BoE6lVtbvzNrD7KY1+ddU=')
+    DATABASE_HOST = Config.decrypt('g75HCbNFvcsBbZTyE5lxxivLSWVED5EW/a3WCvTKu7QB2L+O3V0xGRnRuJ7QfMbH')
     DATABASE = Config.decrypt('iyvZkEdWqJpCFWUCzmzeRNcW3MYNBr2yEYrwbGTCx8wFBTKbEU74ynSyyzEXsVq4')
-    DATABASE_USER = Config.decrypt('Tj8Edm0+VXWM4FbrflUMnLLmDCXhPI+YnWvt3NVS56fDUZ46XaNhU4CeWQm9uaty')
-    DATABASE_PASSWORD = Config.decrypt('M0BXUPFf705v6UxCCH89JbUHR40f6hZJmimsne/k/l/TGU5CTyEXI1nV9MZvZzXf')
+    DATABASE_USER = Config.decrypt('Sfq+bb38EuBgsLKRuP+GpqzAezwQPKXl02UsiwQuWgq5MkEGToVVFO7nqHNvusiM')
+    DATABASE_PASSWORD = Config.decrypt('VLI/oi5AznaBGjyt0Rn2QsO7D7ccX+iUklAdSbE9+sFumcj8AuP8gqGV/ffWTxyT')
 
 
 config_by_name = dict(dev=DevelopmentConfig, local=LocalConfig)

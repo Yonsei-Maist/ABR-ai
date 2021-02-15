@@ -22,6 +22,7 @@ pycryptodome==3.4.3
 ## Custom Library
 ```
 pip install -U git+https://git@github.com/Yonsei-Maist/ABR-image-processor.git
+pip install -U git+https://git@github.com/Yonsei-Maist/maist-model-core.git
 ```
 
 ## Install

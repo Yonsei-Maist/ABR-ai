@@ -9,7 +9,7 @@ import cv2
 import datetime
 import uuid
 
-net = Net('./data/Response-result-origin.txt')
+net = Net('./data/data.2021.01.11.txt')
 extractor = Extractor()
 data_maker = DataMaker()
 

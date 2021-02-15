@@ -1,5 +1,3 @@
-from os import listdir
-from os.path import isfile, join
 from imagelib.extractor import Extractor
 
 import cv2
@@ -9,8 +7,7 @@ class DataMaker:
     def __init__(self):
         self.extractor = Extractor()
 
-    def batch(self, base_path, save_path, x_limit=-1):
-        files = ["{}{}".format(base_path, f) for f in listdir(base_path) if isfile(join(base_path, f))]
+    def batch(self, files, save_path, x_limit=-1):
         graph_list = []
 
         for file in files:
@@ -66,6 +63,7 @@ class DataMaker:
 
     def to_list(self, file_path, graph_list, x_limit=-1):
         text_list = []
+        temp_list = []
         for i in range(len(graph_list)):
             graph_item = graph_list[i]
             graph = [str(g) for g in graph_item["graph"]]
@@ -78,6 +76,8 @@ class DataMaker:
                 else:
                     graph = graph + ["0" for x in range(x_limit - len(graph))]
 
-            text_list.append("{}\t{}\t{}\t{}".format(file_path, i, ",".join(graph), ",".join(peak_list)))
+            text_list.append("{}\t{}\t{}\t{}\t{}".format(file_path, i, ",".join(graph), ",".join(peak_list), ",".join(temp_list)))
+
+            temp_list = peak_list
 
         return text_list
