@@ -14,7 +14,7 @@ class RNNCoreCase1(ModelCore):
     """
     Main Core of ABR Network
     The case No.1
-    reference : https://yonsei-my.sharepoint.com/:p:/g/personal/arknell_o365_yonsei_ac_kr/EbFHInmtXbFPjjAPt9sQSAoB-jg_voKm70DnUN0hha4kpA?e=5jmM1m
+    reference : https://yonsei-my.sharepoint.com/:p:/g/personal/arknell_o365_yonsei_ac_kr/EQcNAgdMCYtOu5Be_P7rLL4B7T8HtQRmVYdtAiMfp5l5yg?e=kNfFNb
     (page 1)
     """
     def __init__(self, data_path, batch_size=64):
@@ -112,7 +112,7 @@ class RNNCoreCase1_1(RNNCoreCase1):
     """
     Main Core of ABR Network
     The case No.1
-    reference : https://yonsei-my.sharepoint.com/:p:/g/personal/arknell_o365_yonsei_ac_kr/EbFHInmtXbFPjjAPt9sQSAoB-jg_voKm70DnUN0hha4kpA?e=5jmM1m
+    reference : https://yonsei-my.sharepoint.com/:p:/g/personal/arknell_o365_yonsei_ac_kr/EQcNAgdMCYtOu5Be_P7rLL4B7T8HtQRmVYdtAiMfp5l5yg?e=kNfFNb
     (page 2)
     """
     def read_data(self):
@@ -122,7 +122,7 @@ class RNNCoreCase1_1(RNNCoreCase1):
         data_all = [[], [], []]
         with open(self._data_path) as f:
             lines = f.readlines()
-
+            max_value = 0
             for i in range(len(lines)):
                 line = lines[i]
                 data_split = line.split('\t')
@@ -156,18 +156,19 @@ class RNNCoreCase1_1(RNNCoreCase1):
 
                     if answer < len(vector):
                         data_all[0].append(data_vector)
-                        max_value = max(data_vector)
-                        new_list = []
-                        for j in range(len(data_vector)):
-                            new_list.append([data_vector[j][0] / max_value[0]])  # normalization
 
                         if index == 0:
                             zeros = [0] * len(data_vector)
+                            max_value = max(data_vector)
                         elif len(before_peak) > 0 and self.check_integer_string(before_peak[-1]) > -1:
                             before_index = int(before_peak[-1])
                             zeros[before_index] = 1
                         else:
                             continue
+
+                        new_list = []
+                        for j in range(len(data_vector)):
+                            new_list.append([data_vector[j][0] / max_value[0]])  # normalization
 
                         data_all[2].append([new_list, zeros])
 

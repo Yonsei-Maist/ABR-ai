@@ -36,13 +36,15 @@ class ABRNet(Net):
         :return: tensor object for model
         """
         tensor_list = []
+        max_value = max(vector_list[0])
         for vector in vector_list:
-            max_value = max(vector)
             change = [x / max_value for x in vector]
+            print(max_value, vector, change)
 
             tensor_list.append(change[: x_limit] if len(change) >= x_limit else change + [0 for x in range(x_limit - len(change))])
 
         tensor = tf.convert_to_tensor(tensor_list)
+
         tensor = tf.reshape(tensor, (len(tensor_list), len(tensor_list[0]), 1))
 
         return tensor
