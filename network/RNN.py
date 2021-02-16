@@ -39,7 +39,6 @@ class ABRNet(Net):
         max_value = max(vector_list[0])
         for vector in vector_list:
             change = [x / max_value for x in vector]
-            print(max_value, vector, change)
 
             tensor_list.append(change[: x_limit] if len(change) >= x_limit else change + [0 for x in range(x_limit - len(change))])
 
