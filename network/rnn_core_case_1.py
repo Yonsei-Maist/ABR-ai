@@ -151,10 +151,9 @@ class RNNCoreCase1_1(RNNCoreCase1):
                     if zero_count > 2:
                         continue
 
-                    vector = data_vector
                     answer = int(peak[-1])
 
-                    if answer < len(vector):
+                    if answer < len(data_vector):
                         data_all[0].append(data_vector)
 
                         if index == 0:

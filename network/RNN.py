@@ -14,6 +14,11 @@ class ABRNet(Net):
     reference : https://github.com/Yonsei-Maist/maist-model-core.git
     """
 
+    def __init__(self, model_name, base_path, model_core):
+        super().__init__(model_name, base_path, model_core)
+        self.__curr_loss_mse = None
+        self.__before_loss_mse = None
+
     def get_value_train_step(self, outputs, labels):
         """
         override to do something during train step
@@ -25,7 +30,6 @@ class ABRNet(Net):
 
         label_val = tf.math.argmax(labels, 1)
         mse = tf.keras.losses.MSE(label_val, predict_index)
-
         return [mse]
 
     def vector_to_data(self, vector_list, x_limit):
@@ -65,6 +69,14 @@ class ABRNet(Net):
             })
 
         return top_list
+
+    def save_when(self, epoch, result_values):
+        mse = result_values[1]
+        if epoch > 100:
+            self.__before_loss_mse = self.__curr_loss_mse
+            self.__curr_loss_mse = mse
+        return self.__before_loss_mse is not None and self.__before_loss_mse > self.__curr_loss_mse
+
     #
     # def capture_image(self, checkpoint_index, image_path):
     #     ldl_c_d_for_graph = []
