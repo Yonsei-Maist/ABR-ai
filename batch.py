@@ -5,8 +5,8 @@ import random
 
 maker = DataMaker()
 
-data_file = "./data/data.2021.01.11.txt"
-
+data_file = "./data/data.2021.04.15.txt"
+"""
 base_paths = [
     "/Volumes/DATACENTER/학습데이터/Infant ABR 1-50/",
     "/Volumes/DATACENTER/학습데이터/Infant ABR 51-110/",
@@ -19,11 +19,17 @@ base_paths = [
     "/Volumes/DATACENTER/학습데이터/2020_12_26/",
     "/Volumes/DATACENTER/학습데이터/2020_12_27/"
 ]
+"""
+
+base_paths = [
+    "/Volumes/DATACENTER/학습데이터/1-10(1)",
+    "/Volumes/DATACENTER/학습데이터/1-10(2)"
+]
 files = []
 
 for base_path in base_paths:
     files.extend(["{}{}".format(base_path, f) for f in listdir(base_path) if isfile(join(base_path, f))])
 
-random.shuffle(files)
+# random.shuffle(files)
 
 maker.batch(files, data_file, 660)
