@@ -22,9 +22,10 @@ base_paths = [
 """
 
 base_paths = [
-    "/Volumes/DATACENTER/학습데이터/1-10(1)",
-    "/Volumes/DATACENTER/학습데이터/1-10(2)"
+    "/Volumes/DATACENTER/학습데이터/1-10(1)/",
+    "/Volumes/DATACENTER/학습데이터/1-10(2)/"
 ]
+
 files = []
 
 for base_path in base_paths:

@@ -87,7 +87,7 @@ class ABRNet(Net):
             self.__curr_loss_mse = mse
         return self.__before_loss_mse is not None and self.__before_loss_mse > self.__curr_loss_mse
 
-    def extract_test_all(self, index, base_path):
+    def extract_test_all(self, index, base_path, graph_labels=None):
         self._model_core.build_model()
         self._model_core.model.load_weights(os.path.join(self._base_path,
                                                          './checkpoints/{}_{}.tf'.format(self.name, index)))
@@ -162,9 +162,9 @@ class ABRNet(Net):
             current_peak_list = [tf.math.argmax(item['data'][1]).numpy() for item in file_one['out']]
             is_testdata_list = [item['is_testdata'] for item in file_one['out']]
             # print(current_peak_list)
-            self.draw_predict(predict, graph_list, is_testdata_list, max_value_list, current_peak_list, os.path.join(save_file_name_parent, save_file_name))
+            self.draw_predict(predict, graph_list, is_testdata_list, max_value_list, current_peak_list, os.path.join(save_file_name_parent, save_file_name), graph_labels)
 
-    def draw_predict(self, predict, graph_list, is_testdata_list, max_value_list, current_peak_list, extract_image_path):
+    def draw_predict(self, predict, graph_list, is_testdata_list, max_value_list, current_peak_list, extract_image_path, graph_labels=None):
         length = 660
         predict_max = tf.math.argmax(predict, 1).numpy()
         predict_percentage = [round(predict[i][item].numpy() * 100, 2) for i, item in enumerate(predict_max)]
@@ -196,6 +196,14 @@ class ABRNet(Net):
                      color='blue',
                      horizontalalignment='center',
                      verticalalignment='bottom')
+
+            if graph_labels is not None:
+                plt.text(15, list_all[i][-1] * max_value_list[i] + 10,
+                         "{0}".format(graph_labels[i]),
+                         fontsize=10,
+                         color='black',
+                         horizontalalignment='center',
+                         verticalalignment='bottom')
 
         plt.xlabel('peak_actual (ms)')
         plt.yticks([])
@@ -229,6 +237,14 @@ class ABRNet(Net):
                      color='blue',
                      horizontalalignment='center',
                      verticalalignment='bottom')
+
+            if graph_labels is not None:
+                plt.text(15, list_all[i][-1] * max_value_list[i] + 10,
+                         "{0}".format(graph_labels[i]),
+                         fontsize=10,
+                         color='black',
+                         horizontalalignment='center',
+                         verticalalignment='bottom')
 
         plt.xlabel('peak_predict (ms)')
         plt.yticks([])

@@ -13,6 +13,7 @@ class DataMaker:
         for file in files:
             try:
                 image = cv2.imread(file)
+                cv2.imwrite('ttt1.png', image)
                 cropped_image = self.crop(image)
                 left_graph, right_graph = self.get_graph(cropped_image)
 
@@ -29,7 +30,6 @@ class DataMaker:
     def crop(self, image):  # 26, 110, 705, 920 (Left) | 740, 110, 1426, 920 (Right)
         left = image[115:920, 26:705]
         right = image[115:920, 740:1426]
-        cv2.imwrite("./data/crop.png", left)
         return [left, right]
 
     def get_graph(self, cropped_image):
