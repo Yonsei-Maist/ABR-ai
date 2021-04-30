@@ -15,6 +15,7 @@ tensorflow 2.3 ~
 pymysql lastest
 flask lastest
 flask_cors lastest
+flask_restful lastest
 matplotlib lastest
 pycryptodome==3.4.3
 ```
