@@ -115,25 +115,26 @@ class ABRNet(Net):
                     origin_one = origin[i]
                     exist = None
                     for item in file:
-                        if item['file'] == origin_one['origin_file'] and item['isRight'] == origin_one['isRight']:
+                        if item['file'] == origin_one['origin_file'] and item['isLeft'] == origin_one['isLeft']:
                             exist = item
                             break
-                    graph_item = {'data': data_one, 'output': outputs[i], 'max_value': origin_one['max_value'], 'is_testdata': is_testdata}
+                    graph_item = {'data': data_one, 'output': outputs[i], 'max_value': origin_one['max_value'], 'diff_len': int(origin_one['diff_len']), 'is_testdata': is_testdata}
                     if exist is None:
-                        file.append({'file': origin_one['origin_file'], 'out': [graph_item], 'isRight': origin_one['isRight']})
+                        file.append({'file': origin_one['origin_file'], 'out': [graph_item], 'isLeft': origin_one['isLeft']})
                     else:
                         exist['out'].append(graph_item)
 
                     predict_max_index = tf.math.argmax(outputs[i]).numpy()
+                    x_limit = 660 - int(origin_one['diff_len'])
                     csv = '{0}\n{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}'.format(
                         csv,
                         i + 1,
                         '/'.join(origin_one['origin_file'].split('/')[-2:]),
-                        'Y' if origin_one['isRight'] is False else 'N',
+                        'Y' if origin_one['isLeft'] is True else 'N',
                         origin_one['index'] + 1,
                         'Y' if is_testdata else 'N',
-                        round(tf.math.argmax(data_one[1]).numpy() / 660 * 15, 2),
-                        round(predict_max_index / 660 * 15, 2),
+                        round(tf.math.argmax(data_one[1]).numpy() / x_limit * 15, 2),
+                        round(predict_max_index / x_limit * 15, 2),
                         round(outputs[i][predict_max_index].numpy() * 100, 2),
                         '{0}-{1}'.format('/'.join(origin_one['origin_file'].split('/')[-2:]), 'real_value.png'),
                         '{0}-{1}'.format('/'.join(origin_one['origin_file'].split('/')[-2:]), 'predict_value.png')
@@ -154,18 +155,24 @@ class ABRNet(Net):
             save_file_name_parent = os.path.join(base_path, file_name.split('/')[-2])
             if not os.path.exists(save_file_name_parent):
                 os.makedirs(save_file_name_parent)
-            save_file_name = '{0}-{1}'.format(file_name.split('/')[-1], 'Left' if file_one['isRight'] is False else 'Right')
-            # print(save_file_name, file_one['isRight'], len(file_one['out']))
+            save_file_name = '{0}-{1}'.format(file_name.split('/')[-1], 'Left' if file_one['isLeft'] is True else 'Right')
+            # print(save_file_name, file_one['isLeft'], len(file_one['out']))
             predict = [item['output'] for item in file_one['out']]
             graph_list = [item['data'][0].numpy() for item in file_one['out']]
             max_value_list = [item['max_value'] for item in file_one['out']]
             current_peak_list = [tf.math.argmax(item['data'][1]).numpy() for item in file_one['out']]
             is_testdata_list = [item['is_testdata'] for item in file_one['out']]
+            diff_len = [item['diff_len'] for item in file_one['out']]
             # print(current_peak_list)
-            self.draw_predict(predict, graph_list, is_testdata_list, max_value_list, current_peak_list, os.path.join(save_file_name_parent, save_file_name), graph_labels)
+            if file_one['isLeft']:
+                labels = ["{}L".format(item) for item in graph_labels]
+            else:
+                labels = ["{}R".format(item) for item in graph_labels]
+            self.draw_predict(predict, graph_list, is_testdata_list, max_value_list, current_peak_list, os.path.join(save_file_name_parent, save_file_name), labels, diff_len)
 
-    def draw_predict(self, predict, graph_list, is_testdata_list, max_value_list, current_peak_list, extract_image_path, graph_labels=None):
-        length = 660
+    def draw_predict(self, predict, graph_list, is_testdata_list, max_value_list, current_peak_list, extract_image_path, graph_labels=None, diff_len=None):
+        length = 660 if diff_len is None else 660 - min(diff_len)
+        print(diff_len)
         predict_max = tf.math.argmax(predict, 1).numpy()
         predict_percentage = [round(predict[i][item].numpy() * 100, 2) for i, item in enumerate(predict_max)]
         list_all = [[item[0] for item in graph] for graph in graph_list]
@@ -176,12 +183,18 @@ class ABRNet(Net):
                 color = '#65D685'
             else:
                 color = '#65C5D6'
+
+            if len(value) > length:
+                value = value[:length]
+            else:
+                value = value + [value[-1] for x in range(length - len(value))]
+
             plt.plot(
-                [i / 660 * 15 for i in range(length)],
+                [i / length * 15 for i in range(length)],
                 [item * max_value_list[i] for item in value], marker='', color=color, linewidth=2)
 
         plt.scatter(
-            [peak_index / 660 * 15 for peak_index in current_peak_list if peak_index != 0],
+            [peak_index / length * 15 for peak_index in current_peak_list if peak_index != 0],
             [list_all[i][current_peak_list[i]] * max_value_list[i] for i in range(len(list_all)) if
              current_peak_list[i] != 0],
             edgecolors='green', color='green', label='real')
@@ -190,8 +203,8 @@ class ABRNet(Net):
             if peak == 0:
                 continue
 
-            plt.text(peak / 660 * 15, list_all[i][peak] * max_value_list[i] + 10,
-                     "{0} ms".format(round(peak / 660 * 15, 2)),
+            plt.text(peak / length * 15, list_all[i][peak] * max_value_list[i] + 10,
+                     "{0} ms".format(round(peak / length * 15, 2)),
                      fontsize=10,
                      color='blue',
                      horizontalalignment='center',
@@ -219,20 +232,26 @@ class ABRNet(Net):
                 color = '#65D685'
             else:
                 color = '#65C5D6'
+
+            if len(value) > length:
+                value = value[:length]
+            else:
+                value = value + [value[-1] for x in range(length - len(value))]
+
             plt.plot(
-                [i / 660 * 15 for i in range(length)],
+                [i / length * 15 for i in range(length)],
                 [item * max_value_list[i] for item in value], marker='', color=color, linewidth=2)
 
         # print(predict_max)
         # print(max_value_list)
         plt.scatter(
-            [predict_max[i] / 660 * 15 for i in range(len(list_all))],
+            [predict_max[i] / length * 15 for i in range(len(list_all))],
             [list_all[i][predict_max[i]] * max_value_list[i] for i in range(len(list_all))],
             marker='x', edgecolors='red', color='red', label='predict')
 
         for i, peak in enumerate(predict_max):
-            plt.text(peak / 660 * 15, list_all[i][peak] * max_value_list[i] + 10,
-                     "{0} ms, {1} %".format(round(peak / 660 * 15, 2), predict_percentage[i]),
+            plt.text(peak / length * 15, list_all[i][peak] * max_value_list[i] + 10,
+                     "{0} ms, {1} %".format(round(peak / length * 15, 2), predict_percentage[i]),
                      fontsize=10,
                      color='blue',
                      horizontalalignment='center',

@@ -17,8 +17,8 @@ class DataMaker:
                 cropped_image = self.crop(image)
                 left_graph, right_graph = self.get_graph(cropped_image)
 
-                graph_list.extend(self.to_list(file, left_graph, x_limit))
-                graph_list.extend(self.to_list(file, right_graph, x_limit))
+                graph_list.extend(self.to_list(file, left_graph, x_limit, True))
+                graph_list.extend(self.to_list(file, right_graph, x_limit, False))
             except Exception as e:
                 graph_list.append("{}\t-1\t{}".format(file, str(e)))
 
@@ -27,9 +27,10 @@ class DataMaker:
 
         print("batch done.")
 
-    def crop(self, image):  # 26, 110, 705, 920 (Left) | 740, 110, 1426, 920 (Right)
-        left = image[115:920, 26:705]
-        right = image[115:920, 740:1426]
+    def crop(self, image):  # 26, 110, 705, 940 (Left) | 740, 110, 1426, 940 (Right)
+        left = image[115:940, 26:705]
+        right = image[115:940, 740:1426]
+        cv2.imwrite('ttt2.png', right)
         return [left, right]
 
     def get_graph(self, cropped_image):
@@ -61,7 +62,7 @@ class DataMaker:
 
         return result
 
-    def to_list(self, file_path, graph_list, x_limit=-1):
+    def to_list(self, file_path, graph_list, x_limit=-1, is_left=True):
         text_list = []
         temp_list = []
         for i in range(len(graph_list)):
@@ -70,13 +71,14 @@ class DataMaker:
             peak_list = graph_item["peak"]
             peak_list = [str(x) for (x, y) in peak_list]
 
+            real_len = len(graph)
             if x_limit > 0:
                 if len(graph) > x_limit:
                     graph = graph[:x_limit]
                 else:
                     graph = graph + ["0" for x in range(x_limit - len(graph))]
 
-            text_list.append("{}\t{}\t{}\t{}\t{}".format(file_path, i, ",".join(graph), ",".join(peak_list), ",".join(temp_list)))
+            text_list.append("{}\t{}\t{}\t{}\t{}\t{}\t{}".format(file_path, i, ",".join(graph), ",".join(peak_list), ",".join(temp_list), "Y" if is_left else "N", x_limit - real_len))
 
             temp_list = peak_list
 

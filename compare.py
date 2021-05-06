@@ -4,14 +4,14 @@ Compare DNN LDL Cholesterol MSE, The Friedelwald equation MSE
 """
 
 from network.RNN import ABRNet
-from network.rnn_core_case_1 import RNNCoreCase1_1
+from network.rnn_core_case_1 import ABRRegression
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
 ldl_c_d_for_graph = []
 data_for_graph = []
 
-core = RNNCoreCase1_1("./data/data.2021.01.11.txt", 64)
+core = ABRRegression("./data/data.2021.01.11.txt", 64)
 net = ABRNet("ABR", "./", core)
 avg_loss, res = net.test(100)
 

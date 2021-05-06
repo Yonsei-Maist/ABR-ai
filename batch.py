@@ -5,7 +5,7 @@ import random
 
 maker = DataMaker()
 
-data_file = "./data/data.2021.04.15.txt"
+data_file = "./data/data.2021.04.19.txt"
 """
 base_paths = [
     "/Volumes/DATACENTER/학습데이터/Infant ABR 1-50/",
