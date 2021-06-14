@@ -5,7 +5,7 @@ import random
 
 maker = DataMaker()
 
-data_file = "./data/data.2021.04.19.txt"
+data_file = "./data/data.2021.06.14.4.txt"
 """
 base_paths = [
     "/Volumes/DATACENTER/학습데이터/Infant ABR 1-50/",
@@ -22,8 +22,7 @@ base_paths = [
 """
 
 base_paths = [
-    "/Volumes/DATACENTER/학습데이터/1-10(1)/",
-    "/Volumes/DATACENTER/학습데이터/1-10(2)/"
+    "/Volumes/DATACENTER/학습데이터/abr/ABR파형분석/CCC/"
 ]
 
 files = []

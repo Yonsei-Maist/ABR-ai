@@ -22,14 +22,15 @@ class DataMaker:
             except Exception as e:
                 graph_list.append("{}\t-1\t{}".format(file, str(e)))
 
-        with open(save_path, "a") as f:
+        with open(save_path, "w") as f:
             f.write("\n".join(graph_list))
 
         print("batch done.")
 
     def crop(self, image):  # 26, 110, 705, 940 (Left) | 740, 110, 1426, 940 (Right)
-        left = image[115:940, 26:705]
-        right = image[115:940, 740:1426]
+        left = image[115:890, 20:700]
+        right = image[115:890, 720:1405]
+        cv2.imwrite('ttt1.png', left)
         cv2.imwrite('ttt2.png', right)
         return [left, right]
 

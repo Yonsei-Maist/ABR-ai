@@ -178,6 +178,13 @@ class ABRNet(Net):
         list_all = [[item[0] for item in graph] for graph in graph_list]
         plt.figure(figsize=(8, 8))
 
+        def get_none_zero(list_find):
+            for i in range(len(list_find)):
+                if list_find[-i - 1] != 0:
+                    return list_find[-i - 1]
+
+            return list_find[-1]
+
         for i, value in enumerate(list_all):
             if is_testdata_list[i]:
                 color = '#65D685'
@@ -211,7 +218,7 @@ class ABRNet(Net):
                      verticalalignment='bottom')
 
             if graph_labels is not None:
-                plt.text(15, list_all[i][-1] * max_value_list[i] + 10,
+                plt.text(15, get_none_zero(list_all[i]) * max_value_list[i] + 10,
                          "{0}".format(graph_labels[i]),
                          fontsize=10,
                          color='black',
@@ -258,7 +265,7 @@ class ABRNet(Net):
                      verticalalignment='bottom')
 
             if graph_labels is not None:
-                plt.text(15, list_all[i][-1] * max_value_list[i] + 10,
+                plt.text(15, get_none_zero(list_all[i]) * max_value_list[i] + 10,
                          "{0}".format(graph_labels[i]),
                          fontsize=10,
                          color='black',

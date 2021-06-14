@@ -19,7 +19,7 @@ class ABRRegression(ModelCore):
     """
     def __init__(self, data_path, batch_size=64):
         self._time_step = None
-        super().__init__(data_path, batch_size=batch_size, avg_list=['loss', 'mse'], loss=LOSS.COSINE_SIMILARITY)
+        super().__init__(data_path, batch_size=batch_size, avg_list=['loss', 'mse'], loss=LOSS.COSINE_SIMILARITY, train_test_ratio=0)
 
         print("train data : ", len(self._train_data))
         print("test data : ", len(self._test_data))
@@ -59,7 +59,7 @@ class ABRRegression(ModelCore):
                             zero_count += 1
                         data_vector.append([value_one])
 
-                    if zero_count > 2:
+                    if zero_count > 20:
                         continue
 
                     answer = int(peak[-1])
