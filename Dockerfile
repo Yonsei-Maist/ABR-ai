@@ -17,6 +17,11 @@ RUN apt-get install -y git
 RUN pip3 install tensorflow
 RUN pip3 install opencv-python
 RUN pip3 install flask
+RUN pip3 install pymysql
+RUN pip3 install flask_cors
+RUN pip3 install flask_restful
+RUN pip3 install matplotlib
+RUN pip3 install pycryptodome==3.4.3
 RUN pip3 install -U git+https://git@github.com/Yonsei-Maist/ABR-image-processor.git
 
 # copy source
@@ -26,5 +31,4 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 # start server
-ENTRYPOINT ["python3"]
-CMD ["serve.py"]
+ENTRYPOINT python3 serve.py $AES_KEY dev
