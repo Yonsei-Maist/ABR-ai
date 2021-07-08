@@ -10,6 +10,8 @@ import cv2
 import datetime
 import uuid
 
+import tensorflow as tf
+
 core = ABRRegression("./data/data_predict.txt", 64)
 
 net = ABRNet("ABR", "./", core)
@@ -61,9 +63,10 @@ class ImageMethod:
     def predict_image(self, file):
         rpath, fpath = self.save_file(file)
 
-        vector = extractor.extract(rpath, 667, True)
+        vector = extractor.extract(fpath, 667, True)
         tensor = net.vector_to_data(vector, 660)
-        predict = net.predict(139, tensor)
+        before_peak_list = [[0] * 660]
+        predict = net.predict(139, [tensor, tf.convert_to_tensor(before_peak_list, dtype=tf.float32)])
 
         pred = net.to_top_predict(predict)
 
