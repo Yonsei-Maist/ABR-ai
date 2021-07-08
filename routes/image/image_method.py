@@ -10,7 +10,7 @@ import cv2
 import datetime
 import uuid
 
-core = ABRRegression("./data/data.2021.06.14.txt", 64)
+core = ABRRegression("./data/data_predict.txt", 64)
 
 net = ABRNet("ABR", "./", core)
 extractor = Extractor()
