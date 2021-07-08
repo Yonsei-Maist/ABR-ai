@@ -1,7 +1,8 @@
 from imagelib.extractor import Extractor
 from lib.data import DataMaker
 from routes.image.image_dao import DataManager
-from network.RNN import Net
+from network.RNN import ABRNet
+from network.rnn_core_case_1 import ABRRegression
 
 import base64
 import os
@@ -9,7 +10,9 @@ import cv2
 import datetime
 import uuid
 
-net = Net('./data/data.2021.01.11.txt')
+core = ABRRegression("./data/data.2021.06.14.txt", 64)
+
+net = ABRNet("ABR", "./", core)
 extractor = Extractor()
 data_maker = DataMaker()
 
