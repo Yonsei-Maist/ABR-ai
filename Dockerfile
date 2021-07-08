@@ -18,6 +18,7 @@ RUN pip3 install tensorflow
 RUN pip3 install opencv-python
 RUN pip3 install flask
 RUN pip3 install pymysql
+RUN pip3 install cryptography
 RUN pip3 install flask_cors
 RUN pip3 install flask_restful
 RUN pip3 install matplotlib
