@@ -38,6 +38,7 @@ def predict_image():
     file = request.files['file']
 
     if file:
+        image_method.upload_origin(file)
         result = image_method.predict_image(file)
 
         return success_msg({"extract": result})

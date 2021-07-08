@@ -29,7 +29,7 @@ class ImageMethod:
             self.app.config["DATABASE_PASSWORD"]
         )
 
-    def upload_origin(self, file):
+    def save_file(self, file):
         new_filename = uuid.uuid4().hex + "." + file.filename.split('.')[1]
         now = datetime.datetime.now()
         frpath = os.path.join(str(now.year), str(now.month), str(now.day))
@@ -40,6 +40,11 @@ class ImageMethod:
         rpath = os.path.join(frpath, new_filename)
         fpath = os.path.join(self.app.config["FILE_PATH"], rpath)
         file.save(fpath)
+
+        return rpath, fpath
+
+    def upload_origin(self, file):
+        rpath, fpath = self.save_file(file)
 
         image = cv2.imread(fpath)
         data_manager = self.create_dao()
@@ -54,12 +59,11 @@ class ImageMethod:
         data_manager.insert_values(result, rpath)
 
     def predict_image(self, file):
-        fpath = os.path.join(self.app.config["FILE_PATH"], file.filename)
-        file.save(fpath)
+        rpath, fpath = self.save_file(file)
 
-        vector = extractor.extract(fpath, 667, True)
+        vector = extractor.extract(rpath, 667, True)
         tensor = net.vector_to_data(vector, 660)
-        predict = net.predict(196, tensor)
+        predict = net.predict(139, tensor)
 
         pred = net.to_top_predict(predict)
 
