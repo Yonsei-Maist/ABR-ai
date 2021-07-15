@@ -45,6 +45,15 @@ def predict_image():
         return fail_msg("file is not exist")
 
 
+@image_api.route("/predict/value", methods=['POST'])
+def predict_image_value():
+    json = request.get_json()
+    value = json["value"]
+    result = image_method.predict_value(value)
+
+    return success_msg({"extract": result})
+
+
 @image_api.route("/data/<int:page>/<int:per_page>")
 @cross_origin()
 def read_data_list(page, per_page):

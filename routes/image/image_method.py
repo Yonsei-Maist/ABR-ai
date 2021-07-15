@@ -64,16 +64,20 @@ class ImageMethod:
         rpath, fpath = self.save_file(file)
 
         vector = extractor.extract(fpath, 667, True)
-        tensor = net.vector_to_data(vector, 660)
+
+        return self.predict_value(vector);
+
+    def predict_value(self, value):
+        tensor = net.vector_to_data(value, 660)
         before_peak_list = [[0] * 660]
         predict = net.predict(139, [tensor, tf.convert_to_tensor(before_peak_list, dtype=tf.float32)])
 
         pred = net.to_top_predict(predict)
 
         result = []
-        for i in range(len(vector)):
+        for i in range(len(value)):
             result.append({
-                "graph": vector[i],
+                "graph": value[i],
                 "peak": pred[i]
             })
 
